@@ -19,7 +19,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
  
-    - name: git-bash
+    - name: download sca
       # You may pin to the exact commit or the version.
       # uses: pkg-src/GitHub-action-git-bash@d7e3f57b86fcf5d919a5ba685d459583735b7611
       # uses: pkg-src/GitHub-action-git-bash@v1.1
@@ -31,9 +31,24 @@ jobs:
         ./Fortify_SCA_and_Apps_21.1.1_linux_x64.run --fortify_license_path ./fortify.license --mode unattended
         export PATH=$PATH:/home/runner/Fortify/Fortify_SCA_and_Apps_21.1.1/bin
         fortifyupdate
+      
+    - name: clean and translate
+      # You may pin to the exact commit or the version.
+      # uses: pkg-src/GitHub-action-git-bash@d7e3f57b86fcf5d919a5ba685d459583735b7611
+      # uses: pkg-src/GitHub-action-git-bash@v1.1
+      run: |
         sourceanalyzer -b GitHub-java-build -clean
         sourceanalyzer -b GitHub-java-build -source 1.8 -debug -verbose -cp "./**/*.jar" 
         "./**/*.java" "./**/*.js" "./**/*.jsp" "./**/*.html" "./**/*.properties" "./**/*.xml"
+        sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
+        fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" 
+        uploadFPR -file GitHub-sast-report.fpr
+
+    - name: sast scan and upload
+      # You may pin to the exact commit or the version.
+      # uses: pkg-src/GitHub-action-git-bash@d7e3f57b86fcf5d919a5ba685d459583735b7611
+      # uses: pkg-src/GitHub-action-git-bash@v1.1
+      run: |
         sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
         fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" 
         uploadFPR -file GitHub-sast-report.fpr
