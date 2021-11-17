@@ -40,7 +40,6 @@ jobs:
         export PATH=$PATH:/home/runner/Fortify/Fortify_SCA_and_Apps_21.1.1/bin
         sourceanalyzer -b GitHub-java-build -clean
         sourceanalyzer -b GitHub-java-build -source 1.8 -debug -verbose -cp "./**/*.jar" "./**/*.java" "./**/*.js" "./**/*.jsp" "./**/*.html" "./**/*.properties" "./**/*.xml"
-        uploadFPR -file GitHub-sast-report.fpr
 
     - name: sast scan and upload
       # You may pin to the exact commit or the version.
