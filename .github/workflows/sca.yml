@@ -57,3 +57,25 @@ jobs:
         name: fortify-report-artifact
         # A file, directory or wildcard pattern that describes what to upload
         path: ./GitHub-sast-report.fpr
+
+    - name: Generate Fortify Report
+      uses: docker://fortifydocker/fortify-vulnerability-exporter:latest
+      with:
+        export_config: /config/SSCToGitHub.yml
+        ssc_baseUrl: ${{ secrets.SSC_URL}}
+        ssc_authToken: ${{ secrets.SSC_UPLOAD_TOKEN }}
+        ssc_version_name: simplisticrabbitmq:11.0
+        # Or use ssc_version_id: 1234
+
+    # Uploaded the generated file containing Fortify vulnerabilities to GitHub.
+    - uses: GitHub/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: ./gh-fortify-sast.sarif
+    
+    # Optionally store the generated file for troubleshooting purposes.
+
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: sarif-files
+        path: ./gh-fortify-sast.sarif
