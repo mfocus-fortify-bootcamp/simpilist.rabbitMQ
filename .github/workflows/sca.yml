@@ -37,10 +37,9 @@ jobs:
       # uses: pkg-src/GitHub-action-git-bash@d7e3f57b86fcf5d919a5ba685d459583735b7611
       # uses: pkg-src/GitHub-action-git-bash@v1.1
       run: |
+        export PATH=$PATH:/home/runner/Fortify/Fortify_SCA_and_Apps_21.1.1/bin
         sourceanalyzer -b GitHub-java-build -clean
         sourceanalyzer -b GitHub-java-build -source 1.8 -debug -verbose -cp "./**/*.jar" "./**/*.java" "./**/*.js" "./**/*.jsp" "./**/*.html" "./**/*.properties" "./**/*.xml"
-        sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
-        fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" 
         uploadFPR -file GitHub-sast-report.fpr
 
     - name: sast scan and upload
@@ -48,6 +47,7 @@ jobs:
       # uses: pkg-src/GitHub-action-git-bash@d7e3f57b86fcf5d919a5ba685d459583735b7611
       # uses: pkg-src/GitHub-action-git-bash@v1.1
       run: |
+        export PATH=$PATH:/home/runner/Fortify/Fortify_SCA_and_Apps_21.1.1/bin
         sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
         fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" uploadFPR -file GitHub-sast-report.fpr
 
