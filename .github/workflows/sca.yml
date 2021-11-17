@@ -38,8 +38,7 @@ jobs:
       # uses: pkg-src/GitHub-action-git-bash@v1.1
       run: |
         sourceanalyzer -b GitHub-java-build -clean
-        sourceanalyzer -b GitHub-java-build -source 1.8 -debug -verbose -cp "./**/*.jar" 
-        "./**/*.java" "./**/*.js" "./**/*.jsp" "./**/*.html" "./**/*.properties" "./**/*.xml"
+        sourceanalyzer -b GitHub-java-build -source 1.8 -debug -verbose -cp "./**/*.jar" "./**/*.java" "./**/*.js" "./**/*.jsp" "./**/*.html" "./**/*.properties" "./**/*.xml"
         sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
         fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" 
         uploadFPR -file GitHub-sast-report.fpr
@@ -50,8 +49,7 @@ jobs:
       # uses: pkg-src/GitHub-action-git-bash@v1.1
       run: |
         sourceanalyzer -b GitHub-java-build -scan -f GitHub-sast-report.fpr
-        fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" 
-        uploadFPR -file GitHub-sast-report.fpr
+        fortifyclient -url ${{ secrets.SSC_URL}} -authtoken ${{ secrets.SSC_UPLOAD_TOKEN }} -application "simplisticrabbitmq" -applicationVersion "11.0" uploadFPR -file GitHub-sast-report.fpr
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
